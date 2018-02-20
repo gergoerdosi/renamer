@@ -1,0 +1,25 @@
+{
+    "name": "gergoerdosi/renamer",
+    "license": "MIT",
+    "description": "Renamer is a batch file renaming tool that allows you to rename lots of files quickly and conveniently.",
+    "require": {
+        "symfony/console": "^4.0",
+        "symfony/yaml": "^4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Renamer\\": "src/Renamer/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Renamer\\Tests\\": "tests/Renamer/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}
