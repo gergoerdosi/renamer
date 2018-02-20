@@ -19,15 +19,20 @@ class RenamerService implements ServiceInterface
 
     public function run()
     {
+        // Group paths by directory name.
         $groups = $this->getPathGroups($this->config->root, $this->config->pattern);
 
+        // Show suggestions by group.
         foreach ($groups as $group => $paths) {
             $suggestions = $this->createSuggestions($group, $paths);
-            $this->listSuggestions($group, $suggestions);
 
-            // if ($this->askConfirmation()) {
-            //     $this->renamePaths($suggestions);
-            // }
+            if (count($suggestions)) {
+                $this->listSuggestions($group, $suggestions);
+
+                if ($this->askConfirmation()) {
+                    $this->renamePaths($group, $suggestions);
+                }
+            }
         }
     }
 
@@ -67,10 +72,28 @@ class RenamerService implements ServiceInterface
 
     protected function listSuggestions(string $dirname, array $basenames)
     {
-        $this->io->writeln("Files to be renamed in <options=bold>{$dirname}</>:");
+        $this->io->writeln("<options=bold>{$dirname}</>:");
 
         foreach ($basenames as $original => $modified) {
-            $this->io->writeln("> {$original} => <fg=yellow>{$modified}</>");
+            $this->io->writeln(" > {$original} => <fg=yellow>{$modified}</>");
         }
+    }
+
+    protected function askConfirmation()
+    {
+        return $this->io->confirm('Correct?');
+    }
+
+    protected function renamePaths(string $dirname, array $basenames)
+    {
+        foreach ($basenames as $original => $modified) {
+            rename(
+                implode(DIRECTORY_SEPARATOR, [$dirname, $original]),
+                implode(DIRECTORY_SEPARATOR, [$dirname, $modified])
+            );
+        }
+
+        $count = count($basenames);
+        $this->io->writeln("<fg=green>Renamed {$count} files.</>");
     }
 }
