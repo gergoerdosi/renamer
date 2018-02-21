@@ -1,5 +1,7 @@
 # Renamer
 
+[![Build Status](https://travis-ci.org/gergoerdosi/renamer.svg?branch=master)](https://travis-ci.org/gergoerdosi/renamer)
+
 Renamer is a batch file renaming tool that allows you to rename lots of files quickly and conveniently.
 
 ## Usage
