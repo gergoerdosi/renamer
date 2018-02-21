@@ -59,24 +59,23 @@ class RenamerService implements ServiceInterface
         $suggestions = array_map(function ($basename) use($dirname, $actions) {
             // Apply actions to the basename.
             $pathinfo = pathinfo(implode(DIRECTORY_SEPARATOR, [$dirname, $basename]));
-            return array_reduce($actions, function ($carry, $action) {
+            $modified = array_reduce($actions, function ($carry, $action) {
                 return $action->execute($carry);
             }, $pathinfo)['basename'];
+
+            return ['original' => $basename, 'modified' => $modified];
         }, $basenames);
 
         // Return only the basenames that were modified.
-        return array_filter(array_combine($basenames, $suggestions), function ($modified, $original) {
-            return $modified !== $original;
-        }, ARRAY_FILTER_USE_BOTH);
+        return array_filter($suggestions, function ($suggestion) {
+            return $suggestion['original'] !== $suggestion['modified'];
+        });
     }
 
-    protected function listSuggestions(string $dirname, array $basenames)
+    protected function listSuggestions(string $dirname, array $suggestions)
     {
-        $this->io->writeln("<options=bold>{$dirname}</>:");
-
-        foreach ($basenames as $original => $modified) {
-            $this->io->writeln(" > {$original} => <fg=yellow>{$modified}</>");
-        }
+        $this->io->writeln("<options=bold>Path: {$dirname}</>");
+        $this->io->table(['Original', 'Modified'], $suggestions);
     }
 
     protected function askConfirmation()
@@ -84,16 +83,16 @@ class RenamerService implements ServiceInterface
         return $this->io->confirm('Correct?');
     }
 
-    protected function renamePaths(string $dirname, array $basenames)
+    protected function renamePaths(string $dirname, array $suggestions)
     {
-        foreach ($basenames as $original => $modified) {
+        foreach ($suggestions as $suggestion) {
             rename(
-                implode(DIRECTORY_SEPARATOR, [$dirname, $original]),
-                implode(DIRECTORY_SEPARATOR, [$dirname, $modified])
+                implode(DIRECTORY_SEPARATOR, [$dirname, $suggestion['original']]),
+                implode(DIRECTORY_SEPARATOR, [$dirname, $suggestion['modified']])
             );
         }
 
-        $count = count($basenames);
-        $this->io->writeln("<fg=green>Renamed {$count} files.</>");
+        $count = count($suggestions);
+        $this->io->writeln("<fg=green>Renamed {$count} files.</>\n");
     }
 }
