@@ -45,7 +45,6 @@ class RenameCommand extends Command
             foreach ($config->renamers as $renamer) {
                 $service = new RenamerService($renamer, $this->io);
                 $service->run();
-
             }
         }
     }

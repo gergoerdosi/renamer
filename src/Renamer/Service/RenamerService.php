@@ -56,7 +56,7 @@ class RenamerService implements ServiceInterface
         }, $this->config->actions);
 
         // Iterate through the basenames and create suggested names.
-        $suggestions = array_map(function ($basename) use($dirname, $actions) {
+        $suggestions = array_map(function ($basename) use ($dirname, $actions) {
             // Apply actions to the basename.
             $pathinfo = pathinfo(implode(DIRECTORY_SEPARATOR, [$dirname, $basename]));
             $modified = array_reduce($actions, function ($carry, $action) {

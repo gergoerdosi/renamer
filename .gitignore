@@ -1,2 +1,6 @@
+# Composer files.
 composer.phar
 /vendor/
+
+# PHP CS Fixer files.
+.php_cs.cache
