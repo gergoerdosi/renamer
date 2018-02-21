@@ -15,13 +15,12 @@ use Symfony\Component\Yaml\Yaml;
  * To use this command, open a terminal window and execute the following:
  *
  *     $ php bin/console renamer:rename
- *
- * To output detailed information, increase the command verbosity:
- *
- *     $ php bin/console renamer:rename -vv
  */
 class RenameCommand extends Command
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
@@ -32,11 +31,17 @@ class RenameCommand extends Command
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->io = new SymfonyStyle($input, $output);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $config = $this->readConfigFile($input->getArgument('config'));
@@ -49,7 +54,13 @@ class RenameCommand extends Command
         }
     }
 
-    protected function readConfigFile($path)
+    /**
+     * Reads the configuration file.
+     *
+     * @param string $path The path to the configuration file.
+     * @return object The parsed configuration object.
+     */
+    protected function readConfigFile(string $path)
     {
         $config = Yaml::parseFile($path, Yaml::PARSE_OBJECT_FOR_MAP);
 

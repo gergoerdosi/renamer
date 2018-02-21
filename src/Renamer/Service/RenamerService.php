@@ -1,22 +1,36 @@
 <?php
 namespace Renamer\Service;
 
-use Renamer\Service\ServiceInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Style\StyleInterface;
 
+/**
+ * Renames files and directories.
+ */
 class RenamerService implements ServiceInterface
 {
+    /**
+     * @var object The configuration object.
+     */
     protected $config;
 
+    /**
+     * The SymfonyStyle helper object.
+     */
     protected $io;
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(object $config, StyleInterface $io)
     {
         $this->config = $config;
         $this->io = $io;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function run()
     {
         // Group paths by directory name.
@@ -36,6 +50,13 @@ class RenamerService implements ServiceInterface
         }
     }
 
+    /**
+     * Gets paths from the filesystem and groups them by parent directory.
+     *
+     * @param string $root The root directory.
+     * @param string $pattern The glob pattern.
+     * @return array Paths grouped by dirname.
+     */
     public function getPathGroups(string $root, string $pattern)
     {
         $groups = [];
@@ -47,6 +68,13 @@ class RenamerService implements ServiceInterface
         return $groups;
     }
 
+    /**
+     * Creates suggestions based on the specified actions.
+     *
+     * @param string $dirname Path to the parent directory.
+     * @param array $basenames Array of basenames.
+     * @return array Array with pairs of original and modified basenames.
+     */
     protected function createSuggestions(string $dirname, array $basenames)
     {
         // Instantiate action classes.
@@ -72,17 +100,32 @@ class RenamerService implements ServiceInterface
         });
     }
 
+    /**
+     * Lists suggestions to the console.
+     *
+     * @param string $dirname Path to the parent directory.
+     * @param array $suggestions Array of original and modified basenames.
+     */
     protected function listSuggestions(string $dirname, array $suggestions)
     {
         $this->io->writeln("<options=bold>Path: {$dirname}</>");
         $this->io->table(['Original', 'Modified'], $suggestions);
     }
 
+    /**
+     * Asks confirmation.
+     */
     protected function askConfirmation()
     {
         return $this->io->confirm('Correct?');
     }
 
+    /**
+     * Renames paths.
+     *
+     * @param string $dirname Path to the parent directory.
+     * @param array $suggestions Array of original and modified basenames.
+     */
     protected function renamePaths(string $dirname, array $suggestions)
     {
         foreach ($suggestions as $suggestion) {
