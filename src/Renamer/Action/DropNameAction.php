@@ -4,7 +4,7 @@ namespace Renamer\Action;
 /**
  * Drops the filename.
  */
-class DropNameAction implements ActionInterface
+class DropNameAction extends AbstractAction
 {
     /**
      * {@inheritdoc}

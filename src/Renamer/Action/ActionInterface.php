@@ -7,6 +7,13 @@ namespace Renamer\Action;
 interface ActionInterface
 {
     /**
+     * Constructor.
+     *
+     * @param array $options Options.
+     */
+    public function __construct(array $options = []);
+
+    /**
      * Executes the action.
      *
      * @param array $pathinfo Array with information about the path.

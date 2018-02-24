@@ -21,7 +21,7 @@
         }
     },
     "scripts": {
-        "test": "phpunit",
+        "test": "phpunit --coverage-text",
         "php-cs-fixer": "php-cs-fixer fix"
     }
 }
