@@ -46,9 +46,10 @@ renamers:
 - pattern: "/Images/*.jpg"
   actions:
   - name: DropName
-    options: {}
+  - name: AddDirectoryName
   - name: AddNumber
-    options: {}
+    options:
+      separator: "_"
 validators:
 - pattern: "/Images/*.jpg"
   actions:
@@ -60,6 +61,8 @@ validators:
 ## Actions
 
 Available actions:
-* `AddDirectoryName`: Adds directory name to the filename.
+* `AddDirectoryName`: Adds directory name to the filename. Options:
+  * `separator`: Separator to use between the directory name and the file name. Defaults to no separator.
 * `AddNumber`: Adds incremented number to the filename.
+  * `separator`: Separator to use between the number and the file name. Defaults to no separator.
 * `DropName`: Drops the filename.
